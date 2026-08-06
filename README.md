@@ -10,28 +10,28 @@ Historically, automated detection relied on 1D Convolutional Neural Networks (CN
 ## 🫀 Clinical Background & Challenges
 A normal cardiac cycle operates with a synchronized electrical sequence, characterized by the P-QRS-T complex. 
 
-![Figure 2.2: Morphology of a healthy person’s ECG wave, showing the P-QRS-T wave pattern, normal physiological amplitudes, and isoelectric intervals.](path/to/figure2.2.png)
+![Figure 2.2: Morphology of a healthy person’s ECG wave, showing the P-QRS-T wave pattern, normal physiological amplitudes, and isoelectric intervals.](Figures/2_2.png)
 
 In contrast, AF is caused by multiple spontaneous ectopic firings, leading to chaotic electrical disarray. In a single-lead ECG, this manifests as the absence of distinct P waves, the presence of continuous fibrillatory (f) waves, and highly irregular R-R intervals. 
 
-![Figure 2.3: ECG morphology comparison of single lead recording: (a) Normal Sinus Rhythm (NSR) and (b) An episode of Atrial Fibrillation (AF).](path/to/figure2.3.png)
+![Figure 2.3: ECG morphology comparison of single lead recording: (a) Normal Sinus Rhythm (NSR) and (b) An episode of Atrial Fibrillation (AF).](Figures/2_3.png)
 
 Single-lead ECGs acquired from ambulatory devices are inherently noisy, susceptible to baseline wander, muscle artifacts, and structural variability. 
 
 ## 🧠 Proposed Architecture & Methodology
 The intelligent arrhythmia detection system is designed as an end-to-end pipeline that transforms raw 1D signals into multi-dimensional multimodal representations. 
 
-![Figure 5.1: Proposed research methodology end-to-end workflow showing data preprocessing, three parallel neural networks pipeline, and late fusion approach.](path/to/figure5.1.png)
+![Figure 5.1: Proposed research methodology end-to-end workflow showing data preprocessing, three parallel neural networks pipeline, and late fusion approach.](Figures/5_1.svg)
 
 ### 1. Data Preprocessing & Windowing
 To maintain mathematical consistency across diverse datasets, all continuous ECG recordings were systematically resampled to 300 Hz. The data was segmented into fixed-length windows of precisely 9,000 discrete samples. Static Z-score normalization was applied using parameters derived solely from the primary training set.
 
-![Figure 5.2: Length distribution of the ECG signal segments in the PhysioNet data set.](path/to/figure5.2.png)
+![Figure 5.2: Length distribution of the ECG signal segments in the PhysioNet data set.](Figures/5_2.png)
 
 ### 2. Multimodal ECG Representations & Base Models
 The 9000x1 ECG vector is transformed into three complementary feature spaces.
 
-![Figure 5.3: NSR (left) and AF (right) multi-domain comparison across Raw, FFT, STFT, and CWT.](path/to/figure5.3.png)
+![Figure 5.3: NSR (left) and AF (right) multi-domain comparison across Raw, FFT, STFT, and CWT.](Figures/5_3.png)
 
 *   **Time-Domain (Raw ECG)**: Captures the time-domain morphology to map sequential rhythmic irregularities. Processed using an optimized 1D-RNN architecture with L2 weight decay and aggressive dropout to prevent overfitting.
 
@@ -69,7 +69,7 @@ The 9000x1 ECG vector is transformed into three complementary feature spaces.
 ### 3. Representation-Aware Late Fusion
 The framework extracts the individual probability vectors ($P_{raw}$, $P_{stft}$, $P_{cwt}$) from the base models. These probabilities are concatenated and passed through a lightweight MLP diagnostic aggregation tool to compute the optimal weighting for a conclusive decision.
 
-![Figure 5.4: Architecture of Late-Fusion Framework in Detail.](path/to/figure5.4.png)
+![Figure 5.4: Architecture of Late-Fusion Framework in Detail.](Figures/5_4.png)
 
 | Layer (Type) | Output Shape | Param # |
 | :--- | :--- | :--- |
@@ -104,9 +104,9 @@ The Late Fusion model dynamically mitigates the weaknesses of individual represe
 | **Late Fusion (Threshold=0.51)** | **97.06** | **97.54** | **94.19** | **98.91** | **98.27** |
 *Table 6.1: Performance (training metrics) of the models selected from each category*
 
-![Figure 6.8: Bar graph showing the comparison between the proposed multi-modal Fusion Model and the baseline models.](path/to/figure6.8.png)
-![Figure 6.9: Confusion Matrix for Representation-Aware Late Fusion approach.](path/to/figure6.9.png)
-![Figure 6.10: Comparison of AUC-ROC curves.](path/to/figure6.10.png)
+![Figure 6.8: Bar graph showing the comparison between the proposed multi-modal Fusion Model and the baseline models.](Figures/6_8.png)
+![Figure 6.9: Confusion Matrix for Representation-Aware Late Fusion approach.](Figures/6_9.png)
+![Figure 6.10: Comparison of AUC-ROC curves.](Figures/6_10.png)
 
 ### External Cross-Dataset Validation (MIT-BIH AF Dataset)
 To rigorously evaluate real-world resilience, the frozen model was deployed on the unseen MIT-BIH AF dataset with zero backpropagation or fine-tuning.
